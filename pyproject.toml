@@ -1,0 +1,12 @@
+[build-system]
+requires = ["setuptools", "wheel"]
+
+[project]
+name = "beyond_compare_script_interface"
+version = "0.1.0"
+description = "Wrapper code designed to create, write, and run scripts for the Beyond Compare application by Scooter Software."
+readme = "README.md"
+authors = [
+    {name = "Steven Broaddus", email = "Steven.Broaddus220@gmail.com"},
+]
+license = { file = "LICENSE" }
