@@ -1,12 +1,20 @@
-[build-system]
-requires = ["setuptools", "wheel"]
-
-[project]
-name = "beyond_compare_script_interface"
+[tool.poetry]
+name = "beyond-compare-script-interface"
 version = "0.1.0"
 description = "Wrapper code designed to create, write, and run scripts for the Beyond Compare application by Scooter Software."
+authors = ["SBroaddus220 <steven.broaddus220@gmail.com>"]
+license = "GPL-3.0-only"
 readme = "README.md"
-authors = [
-    {name = "Steven Broaddus", email = "Steven.Broaddus220@gmail.com"},
-]
-license = { file = "LICENSE" }
+packages = [{include = "beyond_compare_script_interface"}]
+
+[tool.poetry.dependencies]
+python = "^3.11"
+aiofiles = "0.3.2"
+simple_async_command_manager = "^0.1.0"
+
+[tool.poetry.dev-dependencies]
+pytest = "^6.0"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
