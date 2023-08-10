@@ -9,11 +9,8 @@ packages = [{include = "beyond_compare_script_interface"}]
 
 [tool.poetry.dependencies]
 python = "^3.11"
-aiofiles = "0.3.2"
+aiofiles = "^23.2.1"
 simple_async_command_manager = "^0.1.0"
-
-[tool.poetry.dev-dependencies]
-pytest = "^6.0"
 
 [build-system]
 requires = ["poetry-core"]
