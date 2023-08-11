@@ -17,7 +17,6 @@ from unittest import mock
 from unittest.mock import patch, AsyncMock, MagicMock, PropertyMock
 
 from beyond_compare_script_interface.beyond_compare_script import BeyondCompareScript
-from simple_async_command_manager.commands.command_bases import SubprocessCommand
 
 
 # ****************
@@ -80,14 +79,14 @@ class TestBeyondCompareScript(unittest.TestCase):
 
     # ****************
     # Run script / subprocess tests
-    @patch.object(SubprocessCommand, 'run', new_callable=AsyncMock)  # Mock the SubprocessCommand.run method
-    def test_run_script(self, mock_run):
+    @patch("beyond_compare_script_interface.beyond_compare_script.run_command", new_callable=AsyncMock)
+    def test_run_script(self, mock_run_command):
         self.script.script_path = self.test_dir / "beyond_compare_script.txt"
         self.script.script_path.touch()  # Create a temporary file at script_path
         self.script.prepare_subprocess_command()
         asyncio.run(self.script.run_script())
         # Verify the run method was called
-        mock_run.assert_called_once()
+        mock_run_command.assert_called_once()
 
 
     def test_run_script_without_writing(self):
@@ -98,14 +97,14 @@ class TestBeyondCompareScript(unittest.TestCase):
     def test_prepare_subprocess_command(self):
         asyncio.run(self.script.write_new_script())
         command = self.script.prepare_subprocess_command()
-        self.assertIsInstance(command, SubprocessCommand)
-        self.assertEqual(command.command, [f'{self.script.executable_path}', f'@{self.script.script_path}', "/silent"])
+        self.assertIsInstance(command, list)
+        self.assertEqual(command, [f'{self.script.executable_path}', f'@{self.script.script_path}', "/silent"])
 
 
-    def test_run_method_prepares_subprocess(self):
+    @patch("beyond_compare_script_interface.beyond_compare_script.run_command", new_callable=AsyncMock)
+    def test_run_method_prepares_subprocess(self, mock_run_command):
         # Arrange
         mock_subprocess_command = mock.Mock()
-        mock_subprocess_command.run = AsyncMock()
 
         # Manually sets the attribute to the required value to simulate prepare sync subprocess call
         def side_effect():
@@ -120,7 +119,7 @@ class TestBeyondCompareScript(unittest.TestCase):
 
             # Assert
             mock_prepare_subprocess_command.assert_called_once()
-            mock_subprocess_command.run.assert_called_once()
+            mock_run_command.assert_called_once()
 
 
     # ****************

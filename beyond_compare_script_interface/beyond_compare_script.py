@@ -6,12 +6,13 @@ This module contains the BeyondCompareScript class, which is used to create and 
 """
 
 import logging
+import asyncio
 import aiofiles
 from datetime import datetime
 from pathlib import Path
-from typing import Optional
+from typing import Optional, List
 
-from simple_async_command_manager.commands.command_bases import SubprocessCommand
+from beyond_compare_script_interface.utilities.utilities import run_command
 
 # **********
 # Sets up logger
@@ -38,8 +39,8 @@ class BeyondCompareScript:
         self.data_directory = data_directory
         self.data_directory.mkdir(parents=True, exist_ok=True)
         
-        #: The SubprocessCommand object that will be used to run the script.
-        self.subprocess_command: Optional[SubprocessCommand] = None
+        #: The command that will be used to run the script.
+        self.subprocess_command: Optional[List] = None
         
         #: The directory where the script and report files will be saved. 
         self.current_run_directory: Optional[Path] = None
@@ -100,17 +101,20 @@ class BeyondCompareScript:
         """
         self.prepare_subprocess_command()
         logger.info(f"Running script at {self.script_path}")
-        await self.subprocess_command.run(print_output=print_output)
+        try:
+            await run_command(self.subprocess_command, print_output)
+        except RuntimeError as e:
+            logger.error(f"Error running script at {self.script_path}: {str(e)}")
         
         
-    def prepare_subprocess_command(self) -> SubprocessCommand:
-        """Prepares and returns the SubprocessCommand object that will be used to run the script.
+    def prepare_subprocess_command(self) -> List:
+        """Prepares and returns the command that will be used to run the script.
 
         Raises:
             FileNotFoundError: If the script file is None or not found.
 
         Returns:
-            SubprocessCommand: SubprocessCommand object that will be used to run the script.
+            List: Command represented as a list of arguments that will be used to run the script.
         """
         if self.script_path is None or not self.script_path.exists():
             raise FileNotFoundError(f"Script file not found.")
@@ -122,7 +126,7 @@ class BeyondCompareScript:
             "/silent"
         ]
         
-        self.subprocess_command = SubprocessCommand(command)
+        self.subprocess_command = command
         
         return self.subprocess_command
     
