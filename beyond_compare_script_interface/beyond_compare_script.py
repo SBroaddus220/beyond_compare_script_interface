@@ -6,7 +6,6 @@ This module contains the BeyondCompareScript class, which is used to create and 
 """
 
 import logging
-import asyncio
 import aiofiles
 from datetime import datetime
 from pathlib import Path
