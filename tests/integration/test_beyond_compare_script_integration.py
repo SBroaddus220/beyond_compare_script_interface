@@ -90,7 +90,7 @@ class TestBeyondCompareScriptIntegration(unittest.TestCase):
         mirror_script_data_directory = self.test_dir / "mirror_script"
         mirror_script_data_directory.mkdir(parents=True, exist_ok=True)
         self.mirror_script = BeyondCompareScript(
-            executable_path = BEYOND_COMPARE_PATH,
+            executable_path = Path(BEYOND_COMPARE_PATH),
             script_data = BEYOND_COMPARE_MIRROR_SCRIPT_DATA, 
             data_directory = mirror_script_data_directory
         )
