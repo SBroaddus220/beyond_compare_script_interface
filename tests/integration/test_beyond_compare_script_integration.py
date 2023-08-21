@@ -41,7 +41,8 @@ sync create-empty mirror:left->right\
 # **********
 # Gets environment variable for executable path
 BEYOND_COMPARE_PATH = os.environ.get("BEYOND_COMPARE_PATH")
-
+if BEYOND_COMPARE_PATH is not None:
+    BEYOND_COMPARE_PATH = Path(BEYOND_COMPARE_PATH) 
 
 # **********
 def are_dir_trees_equal(dir1: Path, dir2: Path) -> bool:
